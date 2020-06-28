@@ -8,7 +8,7 @@ const connection = mysql.createConnection({
   // Your username
   user: "root",
   // Your password
-  password: "Mu$hr00m",
+  password: "",
   database: "employeeTracker_DB"
 });
 
@@ -27,14 +27,18 @@ runApp = () => {
         choices: [
             "View Employees",
             "Add Department",
+            "Add Employee",
             "Add Employee Roles",
             "Update Employee's Roles"
          ]
     })
-    .then(function(answer) {
+    .then(answer => {
         switch (answer.manage) {
           case "View Employees":
               allEmployees();
+              break;
+          case "Add Employee":
+              addEmployee();
               break;
           case "Add Department":
               addDepartment();
@@ -57,10 +61,63 @@ const allEmployees = () => {
         if (err) throw err;
         console.table(res);
         runApp();
-    }) 
+    }); 
 };
 
-// const addDepartment = () => {
+const addDepartment = () => {
+    inquirer
+        .prompt({
+            name: "department",
+            type: "input",
+            message: "Input new department"
+        })
+        .then(answer => {
+            connection.query("INSERT INTO department SET ?",
+            {
+                dept_name: answer.department
+            },
+            (err, res) => {
+                if (err) throw err;
+                console.log(`New department has been added!`);
+                runApp();
+            });
+        }); 
+};
 
-// };
-// connection.query("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id"
+const addEmployee = () => {
+    inquirer
+        .prompt([
+            {
+                name: "firstName",
+                type: "input",
+                message: "Input new employee's first name"
+            },
+            {
+                name: "lastName",
+                type: "input",
+                message: "Input new employee's last name" 
+            },
+            {
+                name: "roleId",
+                type: "input",
+                message: "Input new employee's role ID"
+            }
+        ])
+        .then(answer => {
+            connection.query("INSERT INTO employee SET ?",
+            {
+                first_name: answer.firstName,
+                last_name: answer.lastName,
+                role_id: parseInt(answer.roleId)
+            },
+            (err, res) => {
+                if (err){
+                    console.log("Please create an new role first in order to add a new employee to new role.")
+                    addRole();
+                    return;
+                } 
+                console.log(`New employee has been added!`);
+                runApp();
+            });
+        }); 
+};
