@@ -8,6 +8,29 @@ const connection = mysql.createConnection({
   // Your username
   user: "root",
   // Your password
-  password: "Mu$hr00m",
+  password: "",
   database: "employeeTracker_DB"
 });
+
+connection.connect(err => {
+    if (err) throw err;
+    console.log("connected as id " + connection.threadId + "\n");
+    // runApp();
+});
+
+
+
+const allEmployees = () => {
+    connection.query("SELECT * FROM employee", (err, res) => {
+        if (err) throw err;
+        console.table(res);
+    })
+};
+
+allEmployees();
+// runApp = () => {
+//   inquirer 
+//     .prompt({
+//         n
+//     })
+// }
