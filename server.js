@@ -8,7 +8,7 @@ const connection = mysql.createConnection({
   // Your username
   user: "root",
   // Your password
-  password: "",
+  password: "Mu$hr00m",
   database: "employeeTracker_DB"
 });
 
@@ -117,6 +117,40 @@ const addEmployee = () => {
                     return;
                 } 
                 console.log(`New employee has been added!`);
+                runApp();
+            });
+        }); 
+};
+
+const addRole = () => {
+    inquirer
+        .prompt([
+            {
+                name: "titleNew",
+                type: "input",
+                message: "Input new role title"
+            },
+            {
+                name: "salaryNew",
+                type: "input",
+                message: "Assign salary to new role (no commas)" 
+            },
+            {
+                name: "deptId",
+                type: "input",
+                message: "Which department ID does this new role belong to?"
+            }
+        ])
+        .then(answer => {
+            connection.query("INSERT INTO role SET ?",
+            {
+                title: answer.titleNew,
+                salary: parseInt(answer.salaryNew),
+                department_id: parseInt(answer.deptId)
+            },
+            (err, res) => {
+                if (err) throw err;
+                console.log(`New role has been added!`);
                 runApp();
             });
         }); 
