@@ -62,7 +62,7 @@ const allEmployees = () => {
         console.table(res);
         runApp();
     }); 
-};
+}; 
 
 const addDepartment = () => {
     inquirer
@@ -151,6 +151,40 @@ const addRole = () => {
             (err, res) => {
                 if (err) throw err;
                 console.log(`New role has been added!`);
+                runApp();
+            });
+        }); 
+};
+const updateRole = () => {
+//    const employeeList = () => {
+//         connection.query( `SELECT employee.first_name, employee.last_name, role.title, role.salary, department.dept_name FROM employee
+//         INNER JOIN role ON employee.role_id = role.id
+//         INNER JOIN department
+//         ON role.department_id = department.id`, (err, res) => {
+//         if (err) throw err;
+//         console.table(res);nod
+//     }); employeeList();
+    inquirer
+        .prompt([
+            {
+                name: "employeeId",
+                type: "input",
+                message: "What is the ID of the employee you want to change?"
+            },
+            {
+                name: "newRole",
+                type: "input",
+                message: "What is the new role ID" 
+            }
+        ])
+        .then(answer => {
+            connection.query("UPDATE employee SET role_id WHERE id",
+            {
+                role_id: parseInt(answer.newRole)
+            },
+            (err, res) => {
+                if (err) throw err;
+                console.log(`Employees new role has been updated!`);
                 runApp();
             });
         }); 
