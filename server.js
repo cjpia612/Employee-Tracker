@@ -163,7 +163,9 @@ const updateRole = () => {
 //         ON role.department_id = department.id`, (err, res) => {
 //         if (err) throw err;
 //         console.table(res);nod
-//     }); employeeList();
+//         }); 
+//     };
+    employeeList();
     inquirer
         .prompt([
             {
@@ -178,10 +180,7 @@ const updateRole = () => {
             }
         ])
         .then(answer => {
-            connection.query("UPDATE employee SET role_id WHERE id",
-            {
-                role_id: parseInt(answer.newRole)
-            },
+            connection.query(`UPDATE employee SET role_id = ${answer.newRole} WHERE id = ${answer.employeeId}`,
             (err, res) => {
                 if (err) throw err;
                 console.log(`Employees new role has been updated!`);
